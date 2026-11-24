@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.api_practica.data.GenRepository
 import com.example.api_practica.data.GenRepositoryRemoto
 import com.example.api_practica.model.Gen
+import com.example.api_practica.model.Secuencia
 import com.example.api_practica.util.Resultado
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,10 @@ import kotlinx.coroutines.launch
 data class GenesUiState(
     val gen: Gen? = null,
     val cargando: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val secuencia: Secuencia? = null,
+    val cargandoSecuencia: Boolean = false,
+    val errorSecuencia: String? = null
 )
 
 /**
@@ -41,13 +45,32 @@ class GenesViewModel(
             return
         }
         viewModelScope.launch {
-            _uiState.update { it.copy(cargando = true, error = null) }
+            _uiState.update {
+                it.copy(cargando = true, error = null, secuencia = null, errorSecuencia = null)
+            }
             when (val resultado = repositorio.obtenerGen(especie, simbolo)) {
                 is Resultado.Exito -> _uiState.update {
                     it.copy(gen = resultado.datos, cargando = false)
                 }
                 is Resultado.Error -> _uiState.update {
                     it.copy(gen = null, error = resultado.mensaje, cargando = false)
+                }
+            }
+        }
+
+
+        /** Evento de la vista: el usuario tocó "Ver secuencia (CDS)". */
+        fun verSecuencia() {
+            val idGen = _uiState.value.gen?.id ?: return
+            viewModelScope.launch {
+                _uiState.update { it.copy(cargandoSecuencia = true, errorSecuencia = null) }
+                when (val resultado = repositorio.obtenerSecuenciaCds(idGen)) {
+                    is Resultado.Exito -> _uiState.update {
+                        it.copy(secuencia = resultado.datos, cargandoSecuencia = false)
+                    }
+                    is Resultado.Error -> _uiState.update {
+                        it.copy(errorSecuencia = resultado.mensaje, cargandoSecuencia = false)
+                    }
                 }
             }
         }
