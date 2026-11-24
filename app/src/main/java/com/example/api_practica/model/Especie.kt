@@ -18,3 +18,11 @@ data class Especie(
     fun claseSegura(): String = clase ?: "Sin clase"
     fun familiaSegura(): String = familia ?: "Sin familia"
 }
+
+// Esta es la clase que envuelve la respuesta de la API
+data class EspeciesRespuesta(
+    @SerializedName("count") val total: Int?,
+    @SerializedName("results") val especies: List<Especie>?
+) {
+    fun totalSeguro(): Int = total ?: 0
+}
