@@ -1,7 +1,7 @@
 package com.example.api_practica.util
 
 
-import android.net.http.HttpException
+import retrofit2.HttpException
 import kotlinx.coroutines.CancellationException
 import java.io.IOException
 
