@@ -10,3 +10,9 @@ data class Especie(
     val family: String?,
     val genus: String?
 )
+
+data class GbifResponse(
+    val count: Int,
+    val results: List<Especie>
+)
+
