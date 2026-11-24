@@ -45,6 +45,8 @@ import com.example.api_practica.ui.theme.Morado
 import com.example.api_practica.ui.theme.Naranja
 import com.example.api_practica.ui.theme.TextoSecundario
 import com.example.api_practica.ui.theme.TextoSobreNoche
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.api_practica.ui.theme.APIPracticaTheme
 
 /**
  * Menú principal: encabezado con logo y nombre de la app, y una tarjeta por API.
@@ -149,5 +151,18 @@ private fun OpcionMenu(
                 tint = TextoSecundario
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MenuScreenPreview() {
+    APIPracticaTheme {
+        MenuScreen(
+            onIrAEspecies = {},
+            onIrAArticulos = {},
+            onIrAGenes = {},
+            onIrATaxones = {}
+        )
     }
 }

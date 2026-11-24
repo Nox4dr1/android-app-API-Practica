@@ -40,6 +40,8 @@ import com.example.api_practica.model.Gen
 import com.example.api_practica.ui.components.EncabezadoPantalla
 import com.example.api_practica.ui.components.MensajeError
 import com.example.api_practica.ui.theme.AcentoEnsembl
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.api_practica.ui.theme.APIPracticaTheme
 import com.example.api_practica.ui.theme.BordeSuave
 import com.example.api_practica.ui.theme.FondoEnsembl
 import com.example.api_practica.ui.theme.FondoLavanda
@@ -181,5 +183,13 @@ private fun DatoGen(etiqueta: String, valor: String, modifier: Modifier = Modifi
     ) {
         Text(etiqueta, style = MaterialTheme.typography.labelSmall, color = TextoSecundario)
         Text(valor, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GenesScreenPreview() {
+    APIPracticaTheme {
+        GenesScreen(onVolver = {})
     }
 }
