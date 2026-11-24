@@ -21,7 +21,8 @@ data class Secuencia(
 
     fun longitudTexto(): String = "%,d pb".format(longitud())
 
-    /** Porcentaje de G + C de toda la secuencia. (En cebadores se busca entre 40 y 60 %). */    fun porcentajeGC(): Double =
+    /** Porcentaje de G + C de toda la secuencia. (En cebadores se busca entre 40 y 60 %). */
+    fun porcentajeGC(): Double =
         if (texto.isEmpty()) 0.0
         else texto.count { it == 'G' || it == 'C' } * 100.0 / texto.length
 
