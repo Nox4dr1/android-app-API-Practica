@@ -1,7 +1,6 @@
 package com.example.api_practica.data.remote
 
 import com.example.api_practica.model.Gen
-import com.example.api_practica.model.Secuencia
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -23,15 +22,4 @@ interface EnsemblApiService {
         @Path("simbolo") simbolo: String,
         @Query("content-type") formato: String
     ): Gen
-
-    /**
-     * Obtiene la secuencia de ADN/CDS de un gen a partir de su ID (ej. ENSG00000139618).
-     */
-    @GET("sequence/id/{id}")
-    suspend fun obtenerSecuencia(
-        @Path("id") idGen: String,
-        @Query("type") tipo: String,
-        @Query("multiple_sequences") multiples: Int,
-        @Query("content-type") formato: String
-    ): List<Secuencia>
 }
