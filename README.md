@@ -21,7 +21,7 @@ app/src/main/java/com/example/api_practica/
 ├── MainActivity.kt
 ├── model/
 │   ├── gbif/          → GbifModels.kt
-│   ├── iNaturalist/   → iNaturalistModels.kt
+│   ├── iNaturalist/   → INaturalistModels.kt
 │   ├── crossref/      → CrossrefModels.kt
 │   └── ensembl/       → EnsemblModels.kt
 └── ui/
@@ -35,14 +35,6 @@ Cada carpeta dentro de `model/` contiene las `data class` que representan la res
 - Kotlin
 - Jetpack Compose + Material 3
 - minSdk 24 / targetSdk 37
-
-## Ramas
-
-| Rama | Contenido |
-|------|-----------|
-| `main` | Proyecto base, estructura de carpetas y modelos de GBIF |
-| `feature/api-crossref` | Modelos de Crossref (`Autor`, `Articulo`, `CrossrefMessage`, `CrossrefResponse`) |
-| `feature/api-ensembl` | Modelos de Ensembl (`Gen`, `Secuencia`) |
 
 ## Cómo ejecutar
 
