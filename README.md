@@ -24,7 +24,7 @@ La identidad visual está inspirada en la biología, el ADN y la naturaleza, uti
 | Color | Hex / Valor | Uso principal |
 |-------|------------|---------------|
 | **Azul Noche** | `#120E4A` | Encabezados principales y barras de navegación |
-| **Fondo Lavanda** | `#F5F3FF` | Fondos de tarjetas y contenedores de datos |
+| **Fondo Lavanda** | `#F5F3FF` | Fondo general de las pantallas |
 | **Cian** | `#22C3F0` | Acentos de hélice de ADN y degradados |
 | **Azul Vivo** | `#2F6BFF` | Color corporativo y sección de artículos (Crossref) |
 | **Naranja** | `#F7931E` | Sección de especies (GBIF) |
@@ -42,7 +42,7 @@ La aplicación implementa el patrón **MVVM (Model-View-ViewModel)** con una est
 |------|----------------|-----------------|
 | **Vista (UI)** | `MenuScreen.kt`, `GenesScreen.kt`, `EspeciesScreen.kt`, `ArticulosScreen.kt`, `TaxonesScreen.kt`, `EncabezadoPantalla.kt` | Interfaz declarativa en Jetpack Compose que observa el estado y delega eventos de usuario. |
 | **ViewModel** | `GenesViewModel.kt` | Gestiona el estado reactivo (`StateFlow`), ejecuta corrutinas fuera del hilo principal y procesa la lógica de presentación. |
-| **Repositorio** | `GenRepository.kt`, `GenRepositoryRemoto.kt` | Abstrae la fuente de datos, decidiendo cómo obtener y estructurar la información (red o caché). |
+| **Repositorio** | `GenRepository.kt` | Abstrae la fuente de datos, obtiene la información desde la API (red). |
 | **Red (API Service)** | `EnsemblApiService.kt`, `GbifApiService.kt`, `CrossrefApiService.kt`, `INaturalistApiService.kt`, `RetrofitClient.kt` | Define las interfaces Retrofit para realizar peticiones HTTP a las APIs externas. |
 | **Modelo** | `Gen.kt`, clases en `model/` | Estructuras de datos (`data class`) con Gson y métodos de encapsulamiento para formatear la información. |
 
@@ -69,7 +69,7 @@ El proyecto aplica los principios SOLID a lo largo de su diseño y desarrollo:
 | `GenesScreen` | Composable | Vista | Pantalla principal de búsqueda de genes y visualización de fichas de ADN. |
 | `GenesViewModel` | ViewModel | ViewModel | Administra el `GenesUiState` y maneja las corrutinas para la consulta de genes. |
 | `GenRepository` | Interface | Repositorio | Contrato abstracto para las operaciones de obtención de genes. |
-| `GenRepositoryRemoto` | Class | Repositorio | Implementación concreta de `GenRepository` conectada a Retrofit. |
+| `GenRepositoryRemoto` | Class | Repositorio | Implementación concreta de `GenRepository` conectada a Retrofit (ubicada en `GenRepository.kt`). |
 | `EnsemblApiService` | Interface | Red | Interfaz Retrofit con los endpoints HTTP de la API de Ensembl. |
 | `Gen` | Data Class | Modelo | Modelo de datos que representa un gen y sus funciones de formateo (`tipoTexto()`, `longitudKb()`, etc.). |
 

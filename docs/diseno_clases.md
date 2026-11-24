@@ -65,7 +65,7 @@ classDiagram
 - **Responsabilidad**: Abstracción de la fuente de datos (principio de inversión de dependencias - D de SOLID).
 - **Comportamiento**:
   - Define el contrato `GenRepository` con el método `obtenerGen(especie, simbolo)`.
-  - `GenRepositoryRemoto` implementa dicha interfaz, encargándose de invocar al servicio de red (`EnsemblApiService`) y manejar resultados (`Resultado.Exito` o `Resultado.Error`).
+  - `GenRepositoryRemoto` (ubicado en el mismo archivo) implementa dicha interfaz, encargándose de invocar al servicio de red (`EnsemblApiService`) y manejar resultados (`Resultado.Exito` o `Resultado.Error`).
 
 ### 4. Capa de Red / API Service (`data/remote/EnsemblApiService.kt`)
 - **Responsabilidad**: Definición de endpoints HTTP utilizando **Retrofit**.
