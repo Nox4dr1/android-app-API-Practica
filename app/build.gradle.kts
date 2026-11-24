@@ -52,4 +52,17 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    // Consumo de API REST: Retrofit + Gson + log de peticiones en Logcat
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+// Corrutinas: funciones suspend fuera del hilo principal
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+// ViewModel (MVVM) y navegación entre pantallas
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0")
+    implementation("androidx.navigation:navigation-compose:2.9.0")
+// Imágenes desde una URL (las usa iNaturalist)
+    implementation("io.coil-kt:coil-compose:2.7.0")
+// Íconos de Material (la misma versión que en el examen)
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }
