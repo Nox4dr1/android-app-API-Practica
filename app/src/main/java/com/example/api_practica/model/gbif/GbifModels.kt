@@ -1,6 +1,6 @@
 package com.example.api_practica.model.gbif
 
-// Aquí van las data class de la API
+// Aquí van las data class de la API GBIF
 data class Especie(
     val key: Long,
     val scientificName: String,

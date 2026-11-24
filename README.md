@@ -21,7 +21,7 @@ app/src/main/java/com/example/api_practica/
 ├── MainActivity.kt
 ├── model/
 │   ├── gbif/          → GbifModels.kt
-│   ├── iNaturalist/   → INaturalistModels.kt
+│   ├── inaturalist/   → INaturalistModels.kt
 │   ├── crossref/      → CrossrefModels.kt
 │   └── ensembl/       → EnsemblModels.kt
 └── ui/
