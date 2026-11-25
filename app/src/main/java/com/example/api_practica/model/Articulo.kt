@@ -46,3 +46,10 @@ data class Articulo(
         return if (lista.isEmpty()) SIN_DATO else lista.joinToString(", ")
     }
 }
+data class MensajeCrossref(
+    @SerializedName("items") val articulos: List<Articulo>?
+)
+
+data class ArticulosRespuesta(
+    @SerializedName("message") val mensaje: MensajeCrossref?
+)
