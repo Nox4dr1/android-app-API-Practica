@@ -30,10 +30,14 @@ fun EspeciesScreen(
             .fillMaxSize()
             .background(FondoGbif)
     ) {
-        // El encabezado obligatorio
+        // El encabezado
+        // El encabezado
         EncabezadoPantalla(
             titulo = "Especies",
-            subtitulo = "GBIF · clasificación de una especie"
+            subtitulo = "GBIF · clasificación de una especie",
+            etiqueta = "GBIF",
+            colorEtiqueta = AcentoGbif,
+            onVolver = {}
         )
 
         // Barra de búsqueda
