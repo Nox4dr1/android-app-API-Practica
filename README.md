@@ -41,10 +41,10 @@ La aplicación implementa el patrón **MVVM (Model-View-ViewModel)** con una est
 | Capa | Archivos clave | Responsabilidad |
 |------|----------------|-----------------|
 | **Vista (UI)** | `MenuScreen.kt`, `GenesScreen.kt`, `EspeciesScreen.kt`, `ArticulosScreen.kt`, `TaxonesScreen.kt`, `EncabezadoPantalla.kt` | Interfaz declarativa en Jetpack Compose que observa el estado y delega eventos de usuario. |
-| **ViewModel** | `GenesViewModel.kt` | Gestiona el estado reactivo (`StateFlow`), ejecuta corrutinas fuera del hilo principal y procesa la lógica de presentación. |
-| **Repositorio** | `GenRepository.kt` | Abstrae la fuente de datos, obtiene la información desde la API (red). |
+| **ViewModel** | `GenesViewModel.kt`, `ArticulosViewModel.kt` | Gestiona el estado reactivo (`StateFlow`), ejecuta corrutinas fuera del hilo principal y procesa la lógica de presentación. |
+| **Repositorio** | `GenRepository.kt`, `CrossrefRepository.kt` | Abstrae la fuente de datos, obtiene la información desde la API (red). |
 | **Red (API Service)** | `EnsemblApiService.kt`, `GbifApiService.kt`, `CrossrefApiService.kt`, `INaturalistApiService.kt`, `RetrofitClient.kt` | Define las interfaces Retrofit para realizar peticiones HTTP a las APIs externas. |
-| **Modelo** | `Gen.kt`, clases en `model/` | Estructuras de datos (`data class`) con Gson y métodos de encapsulamiento para formatear la información. |
+| **Modelo** | `Gen.kt`, `Articulo.kt`, clases en `model/` | Estructuras de datos (`data class`) con Gson y métodos de encapsulamiento para formatear la información. |
 
 ---
 
@@ -54,11 +54,11 @@ El proyecto aplica los principios SOLID a lo largo de su diseño y desarrollo:
 
 | Principio | Aplicación en el proyecto |
 |---|---|
-| **S** (Responsabilidad Única) | Cada componente tiene un único propósito: `Gen` formatea sus datos, `GenesScreen` dibuja la UI, `GenesViewModel` administra el estado, y `GenRepositoryRemoto` gestiona la red. |
+| **S** (Responsabilidad Única) | Cada componente tiene un único propósito: `Gen` y `Articulo` formatean sus datos, `GenesScreen` y `ArticulosScreen` dibujan la UI, `GenesViewModel` y `ArticulosViewModel` administran el estado, y `GenRepositoryRemoto` y `CrossrefRepositoryRemoto` gestionan la red. |
 | **O** (Abierto / Cerrado) | Los componentes visuales como `EncabezadoPantalla` y `PantallaEnConstruccion` están abiertos a la reutilización sin necesidad de modificar su código interno. |
-| **L** (Sustitución de Liskov) | `GenRepositoryRemoto` implementa la interfaz `GenRepository`, pudiendo ser sustituido por un repositorio simulado (Mock/Local) sin afectar al ViewModel. |
-| **I** (Segregación de Interfaces) | Cada API cuenta con su propio servicio de red específico (`EnsemblApiService`, `GbifApiService`, etc.), evitando depender de métodos innecesarios. |
-| **D** (Inversión de Dependencias) | El `GenesViewModel` depende de la abstracción `GenRepository` (interfaz) en lugar de una implementación concreta de red. |
+| **L** (Sustitución de Liskov) | `GenRepositoryRemoto` implementa `GenRepository` y `CrossrefRepositoryRemoto` implementa `CrossrefRepository`, pudiendo ser sustituidos por repositorios simulados (Mock/Local) sin afectar al ViewModel. |
+| **I** (Segregación de Interfaces) | Cada API cuenta con su propio servicio de red específico (`EnsemblApiService`, `GbifApiService`, `CrossrefApiService`, etc.), evitando depender de métodos innecesarios. |
+| **D** (Inversión de Dependencias) | `GenesViewModel` y `ArticulosViewModel` dependen de las abstracciones (`GenRepository` y `CrossrefRepository`) en lugar de una implementación concreta de red. |
 
 ---
 
@@ -72,6 +72,13 @@ El proyecto aplica los principios SOLID a lo largo de su diseño y desarrollo:
 | `GenRepositoryRemoto` | Class | Repositorio | Implementación concreta de `GenRepository` conectada a Retrofit (ubicada en `GenRepository.kt`). |
 | `EnsemblApiService` | Interface | Red | Interfaz Retrofit con los endpoints HTTP de la API de Ensembl. |
 | `Gen` | Data Class | Modelo | Modelo de datos que representa un gen y sus funciones de formateo (`tipoTexto()`, `longitudKb()`, etc.). |
+
+| `ArticulosScreen` | Composable | Vista | Pantalla de búsqueda de artículos científicos y visualización de tarjetas de publicaciones. |
+| `ArticulosViewModel` | ViewModel | ViewModel | Administra el `ArticulosUiState` y maneja las corrutinas para la consulta de artículos en Crossref. |
+| `CrossrefRepository` | Interface | Repositorio | Contrato abstracto para las operaciones de búsqueda de artículos científicos. |
+| `CrossrefRepositoryRemoto` | Class | Repositorio | Implementación concreta de `CrossrefRepository` conectada a Retrofit (ubicada en `CrossrefRepository.kt`). |
+| `CrossrefApiService` | Interface | Red | Interfaz Retrofit con los endpoints HTTP de la API de Crossref. |
+| `Articulo` | Data Class | Modelo | Modelo de datos que representa un artículo científico y sus funciones de formateo (`tituloTexto()`, `autoresTexto()`, `revistaTexto()`, etc.). |
 
 ---
 
