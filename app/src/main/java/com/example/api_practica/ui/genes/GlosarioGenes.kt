@@ -29,4 +29,26 @@ internal object GlosarioGenes {
         "Grupos de 3 bases. Cada codón indica un aminoácido de la proteína; el último es el codón de término."
     const val INICIO_FIN =
         "Comprueba que la secuencia empiece con el codón de inicio ATG y termine en un codón de término (TAA, TAG o TGA)."
+
+
+    // ---------- Ayuda para buscar ----------
+
+    /**
+     * Qué sistema de nombres oficial usar para el símbolo, según la especie escrita.
+     * Si la especie está vacía, se asume humano (la búsqueda por defecto).
+     */
+    fun ayudaSimbolo(especie: String): String =
+        when (especie.trim().lowercase().replace(" ", "_")) {
+            "", "homo_sapiens" ->
+                "Símbolo oficial HGNC (humano), en mayúsculas. Ej.: BRCA2, TP53, CFTR"
+            "mus_musculus" ->
+                "Símbolo oficial MGI (ratón), solo la primera letra en mayúscula. Ej.: Brca2, Trp53"
+            "drosophila_melanogaster" ->
+                "Símbolo de FlyBase (mosca de la fruta). Ej.: w, Adh"
+            "danio_rerio" ->
+                "Símbolo de ZFIN (pez cebra), en minúsculas. Ej.: brca2, tp53"
+            else ->
+                "Usa el símbolo oficial del gen en esa especie."
+        }
+
 }
