@@ -1,5 +1,13 @@
 package com.example.api_practica.ui.genes
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.clip
+import com.example.api_practica.ui.components.DialogoAyuda
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -168,31 +176,71 @@ private fun FichaGen(gen: Gen) {
                 Text(gen.descripcionTexto(), style = MaterialTheme.typography.bodyLarge)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DatoGen("Cromosoma", gen.cromosomaTexto(), Modifier.weight(1f))
-                DatoGen("Hebra", gen.hebraTexto(), Modifier.weight(1f))
+                DatoGen("Cromosoma", gen.cromosomaTexto(), ayuda = GlosarioGenes.CROMOSOMA, modifier = Modifier.weight(1f))
+                DatoGen("Hebra", gen.hebraTexto(), ayuda = GlosarioGenes.HEBRA, modifier = Modifier.weight(1f))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DatoGen("Inicio", gen.inicioTexto(), Modifier.weight(1f))
-                DatoGen("Fin", gen.finTexto(), Modifier.weight(1f))
+                DatoGen("Inicio", gen.inicioTexto(), ayuda = GlosarioGenes.INICIO, modifier = Modifier.weight(1f))
+                DatoGen("Fin", gen.finTexto(), ayuda = GlosarioGenes.FIN, modifier = Modifier.weight(1f))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DatoGen("Longitud", gen.longitudTexto(), Modifier.weight(1f))
-                DatoGen("Ensamblaje", gen.ensamblajeTexto(), Modifier.weight(1f))
+                DatoGen("Longitud", gen.longitudTexto(), ayuda = GlosarioGenes.LONGITUD_GEN, modifier = Modifier.weight(1f))
+                DatoGen("Ensamblaje", gen.ensamblajeTexto(), ayuda = GlosarioGenes.ENSAMBLAJE, modifier = Modifier.weight(1f))
             }
         }
     }
 }
-
-/** Un recuadro con una etiqueta pequeña y su valor. */
+/**
+ * Un recuadro con una etiqueta pequeña y su valor.
+ * Si tiene `ayuda`, muestra un ⓘ y al tocarlo abre una ventana con la explicación.
+ */
 @Composable
-private fun DatoGen(etiqueta: String, valor: String, modifier: Modifier = Modifier) {
+private fun DatoGen(
+    etiqueta: String,
+    valor: String,
+    ayuda: String? = null,
+    modifier: Modifier = Modifier
+) {
+    var mostrarAyuda by remember { mutableStateOf(false) }
+    val forma = RoundedCornerShape(14.dp)
+
     Column(
         modifier = modifier
-            .background(FondoLavanda, RoundedCornerShape(14.dp))
+            .clip(forma)
+            .background(FondoLavanda, forma)
+            .then(
+                if (ayuda != null) {
+                    Modifier.clickable(onClickLabel = "Ver qué significa $etiqueta") { mostrarAyuda = true }
+                } else {
+                    Modifier
+                }
+            )
             .padding(horizontal = 12.dp, vertical = 10.dp)
     ) {
-        Text(etiqueta, style = MaterialTheme.typography.labelSmall, color = TextoSecundario)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(etiqueta, style = MaterialTheme.typography.labelSmall, color = TextoSecundario)
+            if (ayuda != null) {
+                Icon(
+                    Icons.Outlined.Info,
+                    contentDescription = null,
+                    tint = TextoSecundario,
+                    modifier = Modifier.size(14.dp)
+                )
+            }
+        }
         Text(valor, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+    }
+
+    if (mostrarAyuda && ayuda != null) {
+        DialogoAyuda(
+            titulo = etiqueta,
+            explicacion = ayuda,
+            colorAcento = AcentoEnsembl,
+            onCerrar = { mostrarAyuda = false }
+        )
     }
 }
 
@@ -253,12 +301,12 @@ private fun TarjetaSecuencia(secuencia: Secuencia) {
                 )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DatoGen("Longitud", secuencia.longitudTexto(), Modifier.weight(1f))
-                DatoGen("Contenido GC", secuencia.porcentajeGCTexto(), Modifier.weight(1f))
+                DatoGen("Longitud", secuencia.longitudTexto(), ayuda = GlosarioGenes.LONGITUD_CDS, modifier = Modifier.weight(1f))
+                DatoGen("Contenido GC", secuencia.porcentajeGCTexto(), ayuda = GlosarioGenes.CONTENIDO_GC, modifier = Modifier.weight(1f))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DatoGen("Codones", secuencia.codonesTexto(), Modifier.weight(1f))
-                DatoGen("Inicio · fin", secuencia.inicioFinTexto(), Modifier.weight(1f))
+                DatoGen("Codones", secuencia.codonesTexto(), ayuda = GlosarioGenes.CODONES, modifier = Modifier.weight(1f))
+                DatoGen("Inicio · fin", secuencia.inicioFinTexto(), ayuda = GlosarioGenes.INICIO_FIN, modifier = Modifier.weight(1f))
             }
             SelectionContainer {
                 Text(
