@@ -1,13 +1,26 @@
-package com.example.api_practica.data.remote
+package com.example.api_practica.data
 
-import com.example.api_practica.model.EspeciesRespuesta
-import retrofit2.http.GET
-import retrofit2.http.Query
+import com.example.api_practica.data.remote.GbifApiService
+import com.example.api_practica.model.Especie
+import com.example.api_practica.util.Resultado
 
-interface GbifApiService {
-    @GET("species/search")
-    suspend fun buscarEspecies(
-        @Query("q") consulta: String,
-        @Query("limit") limite: Int = 20
-    ): EspeciesRespuesta
+//La interfaz
+interface GbifRepository {
+    suspend fun buscarEspecies(consulta: String): Resultado<List<Especie>>
+}
+
+// a implementación remota
+class GbifRepositoryRemoto(
+    private val api: GbifApiService
+) : GbifRepository {
+
+    override suspend fun buscarEspecies(consulta: String): Resultado<List<Especie>> {
+        return try {
+            val respuesta = api.buscarEspecies(consulta)
+            val lista = respuesta.especies ?: emptyList()
+            Resultado.Exito(lista)
+        } catch (e: Exception) {
+            Resultado.Error(e.message ?: "Error desconocido")
+        }
+    }
 }
