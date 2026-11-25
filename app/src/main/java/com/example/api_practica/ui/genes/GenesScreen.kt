@@ -69,7 +69,7 @@ fun GenesScreen(
     viewModel: GenesViewModel = viewModel()
 ) {
     val estado by viewModel.uiState.collectAsState()
-    var especie by rememberSaveable { mutableStateOf("homo_sapiens") }
+    var especie by rememberSaveable { mutableStateOf("") }
     var simbolo by rememberSaveable { mutableStateOf("") }
     val error = estado.error
     val gen = estado.gen
@@ -91,6 +91,7 @@ fun GenesScreen(
                     value = especie,
                     onValueChange = { especie = it },
                     label = { Text("Especie") },
+                    placeholder = { Text("homo_sapiens", color = EJEMPLO_TRANSPARENTE) },
                     singleLine = true,
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.weight(1f)
@@ -99,12 +100,17 @@ fun GenesScreen(
                     value = simbolo,
                     onValueChange = { simbolo = it },
                     label = { Text("Símbolo") },
-                    placeholder = { Text("BRCA2") },
+                    placeholder = { Text("BRCA2", color = EJEMPLO_TRANSPARENTE) },
                     singleLine = true,
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.width(130.dp)
                 )
             }
+            Text(
+                GlosarioGenes.ayudaSimbolo(especie),
+                style = MaterialTheme.typography.bodySmall,
+                color = TextoSecundario
+            )
             Button(
                 onClick = { viewModel.buscar(especie, simbolo) },
                 colors = ButtonDefaults.buttonColors(containerColor = AcentoEnsembl),
@@ -132,7 +138,7 @@ fun GenesScreen(
                 )
             }
             else -> Text(
-                "Escribe el símbolo de un gen, por ejemplo BRCA2 o TP53.",
+                "Escribe el símbolo de un gen, por ejemplo BRCA2 o TP53. Si no escribes la especie, se busca en humano.",
                 modifier = Modifier.padding(24.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextoSecundario
@@ -334,6 +340,8 @@ private fun TarjetaSecuencia(secuencia: Secuencia) {
 
 /** Cuántas bases se muestran antes de tocar "Ver completa". */
 private const val BASES_VISTA_PREVIA = 300
+/** Color de los textos de ejemplo dentro de los campos: el gris del tema, semitransparente. */
+private val EJEMPLO_TRANSPARENTE = TextoSecundario.copy(alpha = 0.55f)
 
 @Preview(showBackground = true)
 @Composable

@@ -41,18 +41,19 @@ class GenesViewModel(
     private val _uiState = MutableStateFlow(GenesUiState())
     val uiState: StateFlow<GenesUiState> = _uiState.asStateFlow()
 
-    /** Evento de la vista: el usuario tocó "Buscar gen". */
+    /** Evento de la vista: el usuario tocó "Buscar gen". Si no escribe especie, se busca en humano. */
     fun buscar(especie: String, simbolo: String) {
-        if (especie.isBlank() || simbolo.isBlank()) {
-            _uiState.update { it.copy(error = "Escribe la especie y el símbolo del gen") }
+        if (simbolo.isBlank()) {
+            _uiState.update { it.copy(error = "Escribe el símbolo del gen") }
             return
         }
+        val especieBuscada = especie.ifBlank { ESPECIE_POR_DEFECTO }
         viewModelScope.launch {
             // Al buscar un gen nuevo se borra la secuencia del gen anterior.
             _uiState.update {
                 it.copy(cargando = true, error = null, secuencia = null, errorSecuencia = null)
             }
-            when (val resultado = repositorio.obtenerGen(especie, simbolo)) {
+            when (val resultado = repositorio.obtenerGen(especieBuscada, simbolo)) {
                 is Resultado.Exito -> _uiState.update {
                     it.copy(gen = resultado.datos, cargando = false)
                 }
@@ -77,5 +78,9 @@ class GenesViewModel(
                 }
             }
         }
+    }
+
+    private companion object {
+        const val ESPECIE_POR_DEFECTO = "homo_sapiens"
     }
 }
