@@ -13,6 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.api_practica.data.GbifRepositoryRemoto
+import com.example.api_practica.data.remote.RetrofitClient
 import com.example.api_practica.model.Especie
 import com.example.api_practica.ui.components.EncabezadoPantalla
 import com.example.api_practica.ui.theme.AcentoGbif
@@ -20,8 +22,14 @@ import com.example.api_practica.ui.theme.FondoGbif
 
 @Composable
 fun EspeciesScreen(
-    viewModel: EspeciesViewModel = viewModel()
+    onVolver: () -> Unit,
+    viewModel: EspeciesViewModel = viewModel(
+        factory = EspeciesViewModelFactory(
+            GbifRepositoryRemoto(RetrofitClient.gbifApi)
+        )
+    )
 ) {
+    // ... el resto de tu código se queda exactamente igual ...
     val estado by viewModel.estado.collectAsState()
     var textoBusqueda by remember { mutableStateOf("") }
 
@@ -37,7 +45,7 @@ fun EspeciesScreen(
             subtitulo = "GBIF · clasificación de una especie",
             etiqueta = "GBIF",
             colorEtiqueta = AcentoGbif,
-            onVolver = {}
+            onVolver = onVolver
         )
 
         // Barra de búsqueda
