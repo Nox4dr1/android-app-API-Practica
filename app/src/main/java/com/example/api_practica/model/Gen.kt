@@ -54,6 +54,9 @@ data class Gen(
         else -> SIN_DATO
     }
 
+    /** Solo los genes que codifican proteína tienen secuencia CDS. */
+    fun tieneSecuenciaCodificante(): Boolean = tipoBiologico == "protein_coding"
+
     /** Posiciones con separador de miles: 32315474 -> "32.315.474". */
     fun inicioTexto(): String = inicio?.let { "%,d".format(it) } ?: SIN_DATO
     fun finTexto(): String = fin?.let { "%,d".format(it) } ?: SIN_DATO

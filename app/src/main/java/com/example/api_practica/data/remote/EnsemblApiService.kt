@@ -1,6 +1,7 @@
 package com.example.api_practica.data.remote
 
 import com.example.api_practica.model.Gen
+import com.example.api_practica.model.Secuencia
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -22,4 +23,18 @@ interface EnsemblApiService {
         @Path("simbolo") simbolo: String,
         @Query("content-type") formato: String
     ): Gen
+
+    /**
+     * Secuencias de un gen por su ID de Ensembl (ENSG...).
+     * `tipo` = "cds": solo la parte que codifica la proteína (sin intrones ni UTR).
+     * Un gen tiene varios transcritos, por eso `multiplesSecuencias` debe ser 1;
+     * si no, Ensembl responde con error.
+     */
+    @GET("sequence/id/{id}")
+    suspend fun obtenerSecuencias(
+        @Path("id") id: String,
+        @Query("type") tipo: String,
+        @Query("multiple_sequences") multiplesSecuencias: Int,
+        @Query("content-type") formato: String
+    ): List<Secuencia>
 }

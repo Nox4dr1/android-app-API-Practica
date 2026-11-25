@@ -46,6 +46,10 @@ import com.example.api_practica.ui.theme.BordeSuave
 import com.example.api_practica.ui.theme.FondoEnsembl
 import com.example.api_practica.ui.theme.FondoLavanda
 import com.example.api_practica.ui.theme.TextoSecundario
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.TextButton
+import com.example.api_practica.model.Secuencia
 
 /**
  * Pantalla de genes (capa Vista). Solo dibuja el uiState y avisa los eventos al ViewModel.
@@ -65,7 +69,7 @@ fun GenesScreen(
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         EncabezadoPantalla(
             titulo = "Genes y ADN",
-            subtitulo = "Ensembl · ubicación de un gen",
+            subtitulo = "Ensembl · ubicación y secuencia",
             etiqueta = "Ensembl",
             colorEtiqueta = AcentoEnsembl,
             onVolver = onVolver
@@ -109,9 +113,15 @@ fun GenesScreen(
                 onReintentar = { viewModel.buscar(especie, simbolo) }
             )
             gen != null -> Column(
-                Modifier.verticalScroll(rememberScrollState()).padding(16.dp)
+                Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 FichaGen(gen)
+                SeccionSecuencia(
+                    gen = gen,
+                    estado = estado,
+                    onVerSecuencia = { viewModel.verSecuencia() }
+                )
             }
             else -> Text(
                 "Escribe el símbolo de un gen, por ejemplo BRCA2 o TP53.",
@@ -185,6 +195,97 @@ private fun DatoGen(etiqueta: String, valor: String, modifier: Modifier = Modifi
         Text(valor, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
     }
 }
+
+
+/**
+ * Debajo de la ficha: el botón para pedir la secuencia, el indicador de carga,
+ * o la tarjeta con la secuencia si ya llegó.
+ */
+@Composable
+private fun SeccionSecuencia(gen: Gen, estado: GenesUiState, onVerSecuencia: () -> Unit) {
+    val secuencia = estado.secuencia
+    val errorSecuencia = estado.errorSecuencia
+    when {
+        !gen.tieneSecuenciaCodificante() -> Text(
+            "Este gen no codifica proteína, así que no tiene secuencia CDS.",
+            style = MaterialTheme.typography.bodySmall,
+            color = TextoSecundario
+        )
+        estado.cargandoSecuencia -> Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = AcentoEnsembl)
+        }
+        secuencia != null -> TarjetaSecuencia(secuencia)
+        else -> Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (errorSecuencia != null) {
+                Text(errorSecuencia, style = MaterialTheme.typography.bodySmall, color = AcentoEnsembl)
+            }
+            OutlinedButton(
+                onClick = onVerSecuencia,
+                modifier = Modifier.fillMaxWidth().height(52.dp),
+                border = BorderStroke(1.5.dp, AcentoEnsembl)
+            ) { Text("Ver secuencia (CDS)", color = AcentoEnsembl) }
+        }
+    }
+}
+
+/** Tarjeta con 4 datos de la secuencia y sus bases en bloques de 10. */
+@Composable
+private fun TarjetaSecuencia(secuencia: Secuencia) {
+    var mostrarCompleta by rememberSaveable { mutableStateOf(false) }
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(1.dp, BordeSuave)
+    ) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    "Secuencia codificante (CDS)",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    "Transcrito ${secuencia.idTexto()}",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontFamily = FontFamily.Monospace,
+                    color = TextoSecundario
+                )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                DatoGen("Longitud", secuencia.longitudTexto(), Modifier.weight(1f))
+                DatoGen("Contenido GC", secuencia.porcentajeGCTexto(), Modifier.weight(1f))
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                DatoGen("Codones", secuencia.codonesTexto(), Modifier.weight(1f))
+                DatoGen("Inicio · fin", secuencia.inicioFinTexto(), Modifier.weight(1f))
+            }
+            SelectionContainer {
+                Text(
+                    secuencia.basesEnBloques(if (mostrarCompleta) null else BASES_VISTA_PREVIA),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(FondoLavanda, RoundedCornerShape(12.dp))
+                        .padding(12.dp)
+                )
+            }
+            if (secuencia.longitud() > BASES_VISTA_PREVIA) {
+                TextButton(onClick = { mostrarCompleta = !mostrarCompleta }) {
+                    Text(
+                        if (mostrarCompleta) "Ver menos"
+                        else "Ver completa (${secuencia.longitudTexto()})",
+                        color = AcentoEnsembl
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** Cuántas bases se muestran antes de tocar "Ver completa". */
+private const val BASES_VISTA_PREVIA = 300
 
 @Preview(showBackground = true)
 @Composable
