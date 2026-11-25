@@ -44,3 +44,11 @@ data class Foto(
     @SerializedName("attribution")
     val autoria: String?
 )
+
+data class TaxonesRespuesta(
+    @SerializedName("total_results")
+    val total: Int?,
+
+    @SerializedName("results")
+    val taxones: List<Taxon>?
+)
