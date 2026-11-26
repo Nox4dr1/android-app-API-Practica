@@ -3,6 +3,7 @@ package com.example.api_practica.data
 import com.example.api_practica.data.remote.GbifApiService
 import com.example.api_practica.model.Especie
 import com.example.api_practica.util.Resultado
+import com.example.api_practica.util.llamarApi
 
 // 1. La interfaz (El contrato)
 interface GbifRepository {
@@ -13,14 +14,11 @@ interface GbifRepository {
 class GbifRepositoryRemoto(
     private val api: GbifApiService
 ) : GbifRepository {
-
     override suspend fun buscarEspecies(consulta: String): Resultado<List<Especie>> {
-        return try {
+        // Reemplazamos el try/catch por llamarApi
+        return llamarApi {
             val respuesta = api.buscarEspecies(consulta)
-            val lista = respuesta.especies ?: emptyList()
-            Resultado.Exito(lista)
-        } catch (e: Exception) {
-            Resultado.Error(e.message ?: "Error desconocido")
+            respuesta.especies ?: emptyList()
         }
     }
 }
