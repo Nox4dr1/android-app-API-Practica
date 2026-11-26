@@ -17,8 +17,8 @@ import com.example.api_practica.data.GbifRepositoryRemoto
 import com.example.api_practica.data.remote.RetrofitClient
 import com.example.api_practica.model.Especie
 import com.example.api_practica.ui.components.EncabezadoPantalla
+import com.example.api_practica.ui.components.MensajeError // <-- IMPORTANTE: Agregado para el error
 import com.example.api_practica.ui.theme.AcentoGbif
-import com.example.api_practica.ui.theme.FondoGbif
 
 @Composable
 fun EspeciesScreen(
@@ -29,16 +29,14 @@ fun EspeciesScreen(
         )
     )
 ) {
-    // ... el resto de tu código se queda exactamente igual ...
     val estado by viewModel.estado.collectAsState()
     var textoBusqueda by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(FondoGbif)
+            .background(MaterialTheme.colorScheme.background) // <-- Cambiado según corrección 4
     ) {
-        // El encabezado
         // El encabezado
         EncabezadoPantalla(
             titulo = "Especies",
@@ -76,12 +74,14 @@ fun EspeciesScreen(
                 }
             }
             estado.error != null -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Error: ${estado.error}", color = Color.Red)
-                    // La guía dice usar MensajeError, si existe, úsalo aquí
-                }
+                // Usamos el componente MensajeError según corrección 2
+                MensajeError(
+                    mensaje = estado.error ?: "Error desconocido",
+                    onReintentar = { viewModel.buscar(textoBusqueda) },
+                    colorBoton = AcentoGbif // <-- Agregado para solucionar el error de parámetro
+                )
             }
-            else -> {
+            estado.lista.isNotEmpty() -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
@@ -90,6 +90,16 @@ fun EspeciesScreen(
                     items(estado.lista) { especie ->
                         TarjetaEspecie(especie)
                     }
+                }
+            }
+            // Texto inicial según corrección 5
+            else -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "Busca una especie, por ejemplo Puma concolor",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 16.sp
+                    )
                 }
             }
         }

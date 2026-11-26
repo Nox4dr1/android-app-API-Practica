@@ -29,6 +29,15 @@ class EspeciesViewModel(
     val estado: StateFlow<EspeciesUiState> = _estado.asStateFlow()
 
     fun buscar(consulta: String) {
+        // Validación agregada según corrección 3
+        if (consulta.isBlank()) {
+            _estado.value = _estado.value.copy(
+                error = "Por favor, ingresa un término de búsqueda.",
+                lista = emptyList()
+            )
+            return
+        }
+
         viewModelScope.launch {
             _estado.value = _estado.value.copy(cargando = true, error = null)
 
